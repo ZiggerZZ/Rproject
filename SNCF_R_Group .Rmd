@@ -1,0 +1,39 @@
+---
+title: "SNCF"
+author: "Batave"
+date: "27/10/2018"
+output: html_document
+---
+
+
+1. Downloading Packages to use SNCF API
+```{r}
+
+install.packages(c("httr","jsonlite", "lubridate"))
+
+library(httr)
+library(jsonlite)
+library(lubridate)
+
+```
+
+
+2. Connecting to SNCF API
+```{r}
+
+url <- "https://3b036afe-0110-4202-b9ed-99718476c2e0@api.navitia.io/v1/"
+path <- "coverage/"
+  
+"curl https://3b036afe-0110-4202-b9ed-99718476c2e0@api.navitia.io/v1/coverage/
+"
+
+GET(url = url, path = path)
+
+```
+
+
+
+
+
+
+
