@@ -18,16 +18,37 @@ library(lubridate)
 ```
 
 
-2. Connecting to SNCF API
+2. Connecting to SNCF API and observe what information we are collecting
 ```{r}
 
+#Access the right information thanks to the path. The url contains to id key.
 url <- "https://3b036afe-0110-4202-b9ed-99718476c2e0@api.navitia.io/v1/"
-path <- "coverage/"
-  
-"curl https://3b036afe-0110-4202-b9ed-99718476c2e0@api.navitia.io/v1/coverage/
-"
 
-GET(url = url, path = path)
+#let's first try with path giving us   
+path <- "coverage/sandbox/stop_areas/stop_area%3ARAT%3ASA%3ABASTI/lines/line%3ARAT%3AM5/departures?count=4&depth=2&"
+
+#Put content into an object we will analyse
+raw_response <- GET(url = paste(url,path, sep = ""))
+
+#Did the request work ?
+raw_response$status_code
+
+#content seems to be in a format we can't read as is
+head(raw_response$content)
+
+#assessing size and converting to text
+nchar(rawToChar(raw_response$content))
+text_raw <- rawToChar(raw_response$content)
+
+#Looks like it is a single character string with Json file a Json file in it, so let's parse it so that R can work with it
+json_raw <- fromJSON(text_raw)
+json_raw
+
+#What happened ? 
+class(json_raw)
+length(json_raw)
+
+json_raw$departures
 
 ```
 
