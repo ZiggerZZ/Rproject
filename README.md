@@ -13,7 +13,7 @@ We decided to deep dive into SNCF historic datasets and its real time API to gat
 
 Action Plan
 - 
-Our objective is to build a model able to give us a confidence interval of the probability that a specific train on a specific line will be late by 30 min or more and share those results to the public.
+Our objective is to build a model able to give us a confidence interval of the probability that a specific train on a specific line will be late by 30 min or more. Then, share those results to the public in the format of a dashboard.
 
 Result
 -
