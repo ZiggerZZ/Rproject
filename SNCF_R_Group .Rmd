@@ -5,6 +5,9 @@ date: "27/10/2018"
 output: html_document
 ---
 
+--------------------------------------------------------
+# Use of SNCF Open Data API to gather historic data on SNCF trains schedules (real and planned) in France
+
 
 1. Downloading Packages to use SNCF API
 ```{r}
@@ -15,6 +18,7 @@ library(httr)
 library(jsonlite)
 library(lubridate)
 
+
 ```
 
 
@@ -22,10 +26,10 @@ library(lubridate)
 ```{r}
 
 #Access the right information thanks to the path. The url contains to id key.
-url <- "https://3b036afe-0110-4202-b9ed-99718476c2e0@api.navitia.io/v1/"
+url <- "https://6835ac93-272b-4bae-b6d1-fd2bd7bfefc4@api.navitia.io/v1/coverage"
 
 #let's first try with path giving us   
-path <- "coverage/sandbox/stop_areas/stop_area%3ARAT%3ASA%3ABASTI/lines/line%3ARAT%3AM5/departures?count=4&depth=2&"
+path <- "/sandbox/stop_areas/stop_area%3ARAT%3ASA%3ABASTI/lines/line%3ARAT%3AM5/departures?count=4&depth=2&"
 
 #Put content into an object we will analyse
 raw_response <- GET(url = paste(url,path, sep = ""))
@@ -52,9 +56,78 @@ json_raw$departures
 
 ```
 
+--------------------------------------------------------
+# Use of SNCF Open Data "dataset" as I don't find a way to gather insights on past data through the API
+
+0. Download and charge packages
+
+```{r}
+
+library(tidyverse)
+
+```
 
 
 
+1. Read .csv dataset that we found on SNCF Open Data website gathering all kind of information on train being late per month per line since Jan 2014
+
+```{r}
+
+# read .csv
+SNCF_regularite <- read.csv2(file = "regularite-mensuelle-tgv-aqst.csv")
+
+# run basic functions to have a first glimpse on data
+class(SNCF_regularite)
+head(SNCF_regularite)
+View(SNCF_regularite)
+dim(SNCF_regularite)
+summary(SNCF_regularite)
+
+#drop useless columns
+SNCF_regularite <- SNCF_regularite %>% select(-Commentaire..facultatif..annulations, -Commentaire..facultatif..retards.au.départ, -Commentaire..facultatif..retards.à.l.arrivée)
+
+# There is some kind of conversion problems in the when uploading the .csv, most numbers are under the factor format and the factor formatting is messing with ability to order numbers. Let's convert them as character, then numerical.
+
+# First let's convert character column into character
+SNCF_regularite[c("Service","Gare.de.départ","Gare.d.arrivée", "Période")] <- SNCF_regularite[c("Service","Gare.de.départ","Gare.d.arrivée", "Période")] %>% 
+  mutate_all(as.character)
+
+# Then numeric columns into numerics
+SNCF_regularite <- SNCF_regularite %>% 
+  mutate_if(is.factor, funs(as.numeric(levels(.)[.])))
+
+# Now that most variables are numeric, summary makes more sense
+summary(SNCF_regularite)
+
+```
+
+2. Let's try to look for a specific train line to look what information we have
+
+```{r}
+
+# Looking for all available data regarding Paris/Nantes
+
+Paris_Nantes <- SNCF_regularite %>% 
+  filter( Gare.de.départ == "PARIS MONTPARNASSE" , Gare.d.arrivée == "NANTES")
+
+Paris_Nantes
+
+# Simple visualisation plot
+
+Paris_Nantes %>% 
+  ggplot(aes(x = Mois, y = Nombre.de.trains.en.retard.au.départ)) +
+  geom_bar(aes(fill = Année), stat = "identity", position = "dodge")
+
+
+Paris_Nantes %>% 
+  ggplot(aes(x = Mois, y = Nombre.de.trains.en.retard.au.départ)) +
+  geom_raster(aes(fill = Année), stat = "identity", position = "dodge")
+
+# Here we realise for instance that we don't have any data for Oct/Sept 2015 and Oct-Dec 2018 for Paris-Nantes
+
+
+
+```
 
 
 
