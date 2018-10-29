@@ -94,10 +94,16 @@ SNCF_regularite[c("Service","Gare.de.départ","Gare.d.arrivée", "Période")] <-
 
 # Then numeric columns into numerics
 SNCF_regularite <- SNCF_regularite %>% 
-  mutate_if(is.factor, funs(as.numeric(levels(.)[.])))
+  mutate_if(is.factor, funs(as.numeric(levels(.)[.]))) %>% 
+  arrange(Année,Mois)
+
+# Changing Months formatting
+SNCF_regularite[,2] <- month.abb[SNCF_regularite[,2]]
+SNCF_regularite[,2] <- factor(SNCF_regularite[,2], levels = (unique(SNCF_regularite[,2])))
 
 # Now that most variables are numeric, summary makes more sense
 summary(SNCF_regularite)
+SNCF_regularite
 
 ```
 
@@ -116,7 +122,7 @@ Paris_Nantes
 
 Paris_Nantes %>% 
   ggplot(aes(x = Mois, y = Nombre.de.trains.en.retard.au.départ)) +
-  geom_bar(aes(fill = Année), stat = "identity", position = "dodge")
+  geom_bar(aes(fill = Année), stat = "identity")
 
 
 Paris_Nantes %>% 
