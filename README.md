@@ -1,7 +1,7 @@
 # Rproject
 R project in Data Science for Business program X-HEC
 
-# SUBJECT # - "Win money when your train is late"
+# SUBJECT - "Win money when your train is late"
 
 Situation 
 - 
