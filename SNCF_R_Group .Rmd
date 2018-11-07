@@ -130,7 +130,7 @@ Paris_Nantes %>%
   geom_raster(aes(fill = Année), stat = "identity", position = "dodge")
 
 # Here we realise for instance that we don't have any data for Oct/Sept 2015 and Oct-Dec 2018 for Paris-Nantes
-
+#
 
 
 ```
