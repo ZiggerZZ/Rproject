@@ -9,12 +9,39 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 ```{r packages}
 library(dplyr)
 library(ggplot2)
+library(tidyr)
+library(readr)
 ```
 
 ```{r}
-x <- read_csv("regularite-mensuelle-tgv-aqst.csv", sep = ';')
-x
+regularite <- read.csv("regularite-mensuelle-tgv-aqst.csv",sep=";")
 ```
+5 functinos a 
+```{r}
+names(regularite)
+summary(regularite)
+dim(regularite)
+View(regularite)
+head(regularite)
+```
+```{r}
+plot(regularite$Nombre.de.trains.en.retard.au.d..part)
+hist(regularite$Nombre.de.trains.en.retard.au.d..part, breaks = 20)
+```
+Let's tidy the data.
+```{r}
+regularite <- as_tibble(regularite)
+```
+There are 3 columns with comments. Let's check if they all are NA.
+```{r}
+comments <- regularite %>% select(starts_with("Commentaire"))
+all(is.na(comments))
+```
+Apparently there are some comments. But we don't care - let's drop them.
+```{r}
+regularite <- regularite %>% select(-starts_with("Commentaire"))
+```
+
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
