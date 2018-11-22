@@ -34,3 +34,25 @@ fonction_cote <- function(gareA, gareD, mois){
 fonction_cote("PARIS MONTPARNASSE", "NANTES", 12)
 ```
 
+## Function Ypep. When you give "Pepy" it gives back the face of SNCF president Pépy. 
+I need the package "magick" to make this magic trick.  
+
+```{r}
+
+library(magick)
+
+ypep <- function (char) {
+  answers <- c("You did not find the secret recipe","Try again my friend","Think SNCF PDG", "Why don't you try verlan ?", "Oops, wrong answer", "Ok i'll give you an advice try pepy")
+  if (char == "pepy") {
+    pepy <- image_read("http://h16free.com/wp-content/uploads/2011/02/pepy.jpg")
+    return (print(pepy)) 
+    return (print("Well done my bruuu !"))
+  } else {
+     print(answers[floor(runif(1)*6)+1])
+  }
+} 
+
+ypep("test")
+
+```
+
