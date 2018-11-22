@@ -1,0 +1,36 @@
+---
+title: "Functions"
+output: html_notebook
+---
+#This is the Rmd file with all the functions we want to put in our package
+
+## Function "cote" which returns the odds of a train to be late given its departure and arrival stations and the month of the train
+### Package needed for this function: dplyr
+```{r}
+fonction_cote <- function(gareA, gareD, mois){
+  #keep only the columns of interest and put them in the right format and add a column with the proportion of a train late for each month for each line
+  SNCF_regularite_modif <- SNCF_regularite %>% 
+    select(Année,Mois,Gare.de.départ,Gare.d.arrivée, Durée.moyenne.du.trajet..min., Nombre.de.circulations.prévues, Nombre.de.trains.annulés, Nombre.de.trains.en.retard.à.l.arrivée, Nombre.trains.en.retard...15min, Nombre.trains.en.retard...30min, Nombre.trains.en.retard...60min) %>%
+    mutate(Gare.d.arrivée = as.character(Gare.d.arrivée),
+           Gare.de.départ = as.character(Gare.de.départ),
+           Mois = as.integer(Mois)) %>% 
+    mutate_if(is.factor, funs(as.numeric(levels(.)[.]))) %>% 
+    group_by(Gare.d.arrivée, Gare.de.départ) %>% 
+    mutate(prop_trains_en_retard = (Nombre.de.trains.annulés + Nombre.trains.en.retard...15min)/Nombre.de.circulations.prévues)
+
+  #create a table with the inverse of the mean of the proportion to be late for each line over each month
+  cote_table <- SNCF_regularite_modif %>% 
+    group_by(Gare.d.arrivée, Gare.de.départ, Mois) %>% 
+    summarise(cote_du_train = 1/mean(prop_trains_en_retard))
+  
+  #return only the train of interest (using the arguments of the function)
+  cote <- cote_table %>%
+    filter(Gare.d.arrivée == gareA & Gare.de.départ == gareD & Mois == mois)
+  
+  return(as.numeric(cote[,4]))
+}
+
+#example:
+fonction_cote("PARIS MONTPARNASSE", "NANTES", 12)
+```
+
