@@ -21,3 +21,6 @@ BetModule <- function(input, output, session, data) {
 
 }
 
+=======
+title: "Module for the odds"
+>>>>>>> 84fd418ff6bfccffec1ebc1781957eeb162ad9dd
