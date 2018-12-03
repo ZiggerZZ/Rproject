@@ -56,3 +56,42 @@ ypep("test")
 
 ```
 
+
+## Function "raison" which returns a summary of the most probable reasons for a train to be late given its departure and arrival stations and the month
+### Package needed for this function: dplyr
+
+
+fonction_raison <- function(gareD, gareA, mois){
+  #keep only the columns of interest and put them in the right format
+  SNCF_regularite_modif <- SNCF_regularite %>% 
+    select(Année, Mois, Gare.de.départ, Gare.d.arrivée, Nombre.de.circulations.prévues, Nombre.de.trains.annulés, Nombre.trains.en.retard...15min,
+           X..trains.en.retard.pour.causes.externes..météo..obstacles..colis.suspects..malveillance..mouvements.sociaux..etc..,
+           X..trains.en.retard.à.cause.infrastructure.ferroviaire..maintenance..travaux.,
+           X..trains.en.retard.à.cause.gestion.trafic..circulation.sur.ligne.ferroviaire..interactions.réseaux.,
+           X..trains.en.retard.à.cause.matériel.roulant, X..trains.en.retard.à.cause.gestion.en.gare.et.réutilisation.de.matériel,
+           X..trains.en.retard.à.cause.prise.en.compte.voyageurs..affluence..gestions.PSH..correspondances.) %>%
+    mutate(Gare.d.arrivée = as.character(Gare.d.arrivée),
+           Gare.de.départ = as.character(Gare.de.départ),
+           Mois = as.integer(Mois)) %>% 
+    mutate_if(is.factor, funs(as.numeric(levels(.)[.])))
+  
+  #create a table with the mean of the percentages of reasons for delays of trains
+  raison_table <- SNCF_regularite_modif %>% 
+    group_by(Gare.d.arrivée, Gare.de.départ, Mois) %>% 
+    summarise(cause_externe = mean(X..trains.en.retard.pour.causes.externes..météo..obstacles..colis.suspects..malveillance..mouvements.sociaux..etc..),
+              infrastructure = mean(X..trains.en.retard.à.cause.infrastructure.ferroviaire..maintenance..travaux.),
+              gestion_trafic = mean(X..trains.en.retard.à.cause.gestion.trafic..circulation.sur.ligne.ferroviaire..interactions.réseaux.),
+              materiel_roulant = mean(X..trains.en.retard.à.cause.matériel.roulant),
+              gestion_en_gare = mean(X..trains.en.retard.à.cause.gestion.en.gare.et.réutilisation.de.matériel),
+              prise_en_compte_voyageur = mean(X..trains.en.retard.à.cause.prise.en.compte.voyageurs..affluence..gestions.PSH..correspondances.))
+  
+  raison <- raison_table %>%
+    filter(Gare.d.arrivée == gareA & Gare.de.départ == gareD & Mois == mois)
+
+  return(raison[,4:9])
+}
+
+fonction_raison("PARIS MONTPARNASSE", "NANTES", 4)
+
+```
+
