@@ -4,11 +4,43 @@ output: html_document
 ---
 
 #Working directory of miny's function
-
-
-##Function temps moyen trajet
-```{r}
+```{r Loading the datas}
 SNCF_regularite <- read.csv2("regularite-mensuelle-tgv-aqst.csv")
+library(dplyr)
 ```
 
-##Function retard moyen trajet
+
+##Function temps moyen trajet (in minutes)
+```{r}
+fonction_temps_moyen <- function(gareA, gareB){
+  SNCF_regularite_modif <- 
+    SNCF_regularite %>% 
+    filter(Gare.de.d..part==gareA, Gare.d.arriv..e==gareB)
+  
+  SNCF_regularite_modif %>% 
+    select(Dur..e.moyenne.du.trajet..min.) %>% 
+    mutate(Dur..e.moyenne.du.trajet..min. = as.numeric(as.character(Dur..e.moyenne.du.trajet..min.))) %>% 
+    summarise(Mean_Time = mean(as.numeric(Dur..e.moyenne.du.trajet..min.)))
+}
+
+fonction_temps_moyen(gareA = "METZ", gareB = "PARIS EST")
+```
+
+##Function retard moyen de tous les trains à l'arrivée (in minutes)
+```{r}
+fonction_retard_moyen_arrival <- function(gareA, gareB){
+   SNCF_regularite_modif <- 
+    SNCF_regularite %>% 
+    filter(Gare.de.d..part==gareA, Gare.d.arriv..e==gareB)
+  
+  SNCF_regularite_modif %>% 
+    select(Retard.moyen.de.tous.les.trains....l.arriv..e..min.) %>% 
+    mutate(Retard.moyen.de.tous.les.trains....l.arriv..e..min. = as.numeric(as.character(Retard.moyen.de.tous.les.trains....l.arriv..e..min.))) %>% 
+    summarise(Mean_delay = mean(as.numeric(Retard.moyen.de.tous.les.trains....l.arriv..e..min.)))
+  
+}
+
+fonction_retard_moyen_arrival(gareA = "METZ", gareB = "PARIS EST")
+
+```
+
