@@ -1,0 +1,14 @@
+---
+title: "Functions Miny"
+output: html_document
+---
+
+#Working directory of miny's function
+
+
+##Function temps moyen trajet
+```{r}
+SNCF_regularite <- read.csv2("regularite-mensuelle-tgv-aqst.csv")
+```
+
+##Function retard moyen trajet
