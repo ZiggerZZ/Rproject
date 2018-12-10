@@ -5,6 +5,8 @@
 #' @return data frame with latitude and longitude of said "google map" request
 #' @export
 #'
+#' @import jsonlite
+#'
 #' @examples geocoding("nantes, gare"), geocoding("gare de nantes")$lon, geocoding("gare, nantes")$lat
 
 
