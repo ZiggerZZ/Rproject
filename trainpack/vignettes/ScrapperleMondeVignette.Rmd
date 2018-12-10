@@ -1,0 +1,77 @@
+---
+title: "ScrapperLeMondeVignette"
+author: "Tristan Mayer"
+date: "10 December 2018"
+output:
+  html_document:
+    df_print: paged
+vignette: null
+---
+# How did we get the data from Le Monde?
+One feature of our application is to provide few facts that might help to the person who is going to place his/her bet on the train evaluating how reliable is the odd we give.
+As part of these facts, we want to see if it is likely for the trains to be late because of a strike.
+To see this, we are going to display how many articles published on LeMonde.fr containing the words 'grève sncf'.
+We think that this number will be a good proxi to determine whether there is a strike.
+
+
+## We want to get a dataframe containing the number of articles containing the words 'grève SNCF' published on LeMonde.fr per month
+ 
+We will use the following packages:
+```{r, eval = FALSE}
+library(dplyr)
+library(rvest)
+library(purrr)
+library(httr)
+library(glue)
+library(tidyr)
+```
+
+Then we want to scrapp the date of all the articles found on the research engine of LeMonde.fr with the words 'grève sncf' for the period we have the data for.
+The number of pages we will scrapp is given by the highest number of pages on the slidebar.
+```{r, eval = FALSE}
+number_of_pages <- read_html("https://www.lemonde.fr/recherche/?keywords=gr%C3%A8ve+sncf&page_num=1&operator=or&exclude_keywords=&qt=recherche_texte_titre&author=&period=custom_date&start_day=01&start_month=01&start_year=2015&end_day=04&end_month=12&end_year=2018&sort=desc") %>%
+  html_nodes(".page") %>% 
+  html_text() %>% 
+  as.numeric() %>% 
+  as.vector() %>% 
+  max()
+```
+
+Then we want to create the url of all the pages contining the result of the research
+```{r, eval = FALSE}
+my_page <- function(num) {
+  url <- glue("https://www.lemonde.fr/recherche/?keywords=gr%C3%A8ve+sncf&page_num={num}&operator=or&exclude_keywords=&qt=recherche_texte_titre&author=&period=custom_date&start_day=01&start_month=01&start_year=2015&end_day=04&end_month=12&end_year=2018&sort=desc")
+  read_html(url)
+  }
+
+pages <- lapply(1:number_of_pages, my_page)
+```
+
+The we want to get all the dates of all the articles on the pages and combine those in one single dataframe 
+```{r, eval = FALSE}
+get_dates <- function(page){
+  page %>%
+    html_nodes("span.txt1.signature") %>% 
+    html_text() %>% 
+    as.data.frame(stringsAsFactors = FALSE) %>% 
+    separate(".", into= c("Source", "Date"), sep = '[|]') %>% 
+    separate("Date", into = c('space', 'day', 'month', 'year'), sep = " ") %>% 
+    select("month", "year")
+}
+
+dates <- lapply(pages, get_dates)
+
+alldates <- do.call(rbind, dates) %>%
+  group_by(month, year) %>% 
+  count()
+
+alldates
+
+```
+
+Finally, we save it as a .csv
+```{r, eval = FALSE}
+
+write.csv(alldates, file = "LeMondefr_Articles_dates.csv")
+
+```
