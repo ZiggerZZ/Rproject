@@ -16,8 +16,8 @@ geocoding <- function(address = NULL)
     d <- jsonlite::fromJSON( 
       gsub('\\@addr\\@', gsub('\\s+', '\\%20', address), 
            'http://nominatim.openstreetmap.org/search/@addr@?format=json&addressdetails=0&limit=1')
-    ), error = function(c) return(data.frame())
+    ), error = function(c) return(data.frame(lon = 0, lat = 0))
   )
-  if(length(d) == 0) return(data.frame())
+  if(length(d) == 0) return(data.frame(lon = 0, lat = 0))
   return(data.frame(lon = as.numeric(d$lon), lat = as.numeric(d$lat)))
 }
