@@ -1,6 +1,6 @@
 Package: trainpack
 Title: Statistical analysis of SNCF train delays
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: c(person("Xavier", "de Boisredon", email = "xavier.de-boisredon@polytechnique.edu", role = "aut"),person("Tristan", "Mayer", email = "tristan.mayer@polytechnique.edu", role = "aut"),person("Alexandre", "Miny", email = "alexandre.miny@polytechnique.edu", role = "aut"),person("Hossein", "Talebi", email = "hossein.talebi@polytechnique.edu", role = "aut"),person("Zigfrid", "Zvezdin", email = "zigfrid.zvezdin@polytechnique.edu", role = c("aut", "cre")))
 Description: This package uses the SNCF data about the delays for French National Railways to perform some statistical analysis.  
 Depends: R (>= 3.5.1)

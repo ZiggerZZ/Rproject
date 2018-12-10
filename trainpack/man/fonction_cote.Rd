@@ -2,19 +2,27 @@
 % Please edit documentation in R/fonction_cote.R
 \name{fonction_cote}
 \alias{fonction_cote}
-\title{fonction_cote}
+\title{fonction_cote function}
 \usage{
-fonction_cote(gareA, gareD, mois)
+fonction_cote(gareA, gareB, mois)
 }
 \arguments{
-\item{mois}{}
+\item{gareA}{the name of the departure railway station.
+Must be one of the stations in the dataframe \code{SNCF_regularite}.}
+
+\item{gareB}{the name of the arrival railway station.
+Must be one of the stations in the dataframe \code{SNCF_regularite}.}
+
+\item{mois}{month when the train goes from (\code{gareA} to \code{gareB})}
 }
 \value{
-the odds of a train to be late given its departure and arrival stations and the month of the train
+odd of the train to be late
 }
 \description{
-fonction_cote
+fonction_cote function
 }
 \examples{
 fonction_cote("PARIS MONTPARNASSE", "NANTES", 12)
+
+
 }

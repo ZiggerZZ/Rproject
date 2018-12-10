@@ -1,6 +1,6 @@
 #' ypep function
 #'
-#' @param char
+#' @param char a string
 #'
 #' @import magick
 #'

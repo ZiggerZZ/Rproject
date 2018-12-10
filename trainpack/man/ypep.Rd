@@ -7,7 +7,7 @@
 ypep(char)
 }
 \arguments{
-\item{char}{}
+\item{char}{a string}
 }
 \value{
 pepy

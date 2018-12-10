@@ -1,7 +1,9 @@
 #' fonction_temps_moyen function
 #'
-#' @param gareA
-#' @param gareB
+#' @param gareA the name of the departure railway station.
+#' Must be one of the stations in the dataframe \code{SNCF_regularite}.
+#' @param gareB the name of the arrival railway station.
+#' Must be one of the stations in the dataframe \code{SNCF_regularite}.
 #'
 #' @import dplyr
 #'
@@ -10,8 +12,8 @@
 #'
 #' @examples fonction_temps_moyen(gareA = "METZ", gareB = "PARIS EST")
 fonction_temps_moyen <- function(gareA, gareB) {
-  SNCF_regularite %>%
-    filter(`Gare de départ` == gareA, `Gare d'arrivée` == gareB) %>%
-    select(`Durée moyenne du trajet (min)`) %>%
-    summarise(Mean_Time = mean(`Durée moyenne du trajet (min)`))
+  trainpack::SNCF_regularite %>%
+    filter(gare_de_depart == gareA, gare_d_arrivee == gareB) %>%
+    select(duree_moyenne_du_trajet) %>%
+    summarise(Mean_Time = mean(duree_moyenne_du_trajet))
 }

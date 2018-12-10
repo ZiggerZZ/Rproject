@@ -7,7 +7,11 @@
 fonction_temps_moyen(gareA, gareB)
 }
 \arguments{
-\item{gareB}{}
+\item{gareA}{the name of the departure railway station.
+Must be one of the stations in the dataframe \code{SNCF_regularite}.}
+
+\item{gareB}{the name of the arrival railway station.
+Must be one of the stations in the dataframe \code{SNCF_regularite}.}
 }
 \value{
 average delay

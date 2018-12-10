@@ -1,10 +1,10 @@
 #' Proportion of Delay times
 #'
-#' @param gareD - The name of the depurture Stations.
-#'  it must be one of the station which exist in the database "SNCF_regularite"
-#' @param gareA - The name of the arrival Stations.
-#'  it must be one of the station which exist in the database "SNCF_regularite"
-#' @param mois - the month witch will be consider in the function
+#' @param gareD the name of the departure railway station.
+#' Must be one of the stations in the dataframe \code{SNCF_regularite}.
+#' @param gareA the name of the arrival railway station.
+#' Must be one of the stations in the dataframe \code{SNCF_regularite}.
+#' @param mois the month witch will be considered in the function
 #' @import dplyr
 #'
 #' @return it will return a dataframe with different types of delay times as names of the column and the proportion of each type in the specific month, between two selected stations
@@ -13,20 +13,17 @@
 #'
 #' @examples delay_propr("PARIS MONTPARNASSE", "NANTES", 12)
 delay_propr <- function(gareD,gareA,mois){
-  SNCF_regularite_modif <- SNCF_regularite %>%
-    select(`Année`,Mois,`Gare de départ`,`Nombre de trains annulés`,`Nombre de circulations prévues`,`Nombre de trains en retard à l'arrivée`,`Gare d'arrivée`,`Nombre trains en retard > 15min`,`Nombre trains en retard > 30min`,`Nombre trains en retard > 60min`) %>%
-    mutate(`Gare d'arrivée` = as.character(`Gare d'arrivée`),
-           `Gare de départ` = as.character(`Gare de départ`),
-           Mois = as.integer(Mois)) %>%
-    mutate_if(is.factor, funs(as.numeric(levels(.)[.]))) %>%
-    group_by(`Gare d'arrivée`,`Gare de départ`,Mois) %>%
-    summarise(`Proportion trains en retard > 15min` = sum(`Nombre trains en retard > 15min`)/(sum(`Nombre de trains annulés`)+sum(`Nombre trains en retard > 60min`)+sum(`Nombre trains en retard > 30min`)+sum(`Nombre trains en retard > 15min`)),
-              `Proportion trains en retard > 30min` = sum(`Nombre trains en retard > 30min`)/(sum(`Nombre de trains annulés`)+sum(`Nombre trains en retard > 60min`)+sum(`Nombre trains en retard > 30min`)+sum(`Nombre trains en retard > 15min`)),
-              `Proportion trains en retard > 60min` = sum(`Nombre trains en retard > 60min`)/(sum(`Nombre de trains annulés`)+sum(`Nombre trains en retard > 60min`)+sum(`Nombre trains en retard > 30min`)+sum(`Nombre trains en retard > 15min`))
-              ,`Proportion de trains annulés` = sum(`Nombre de trains annulés`)/(sum(`Nombre de trains annulés`)+sum(`Nombre trains en retard > 60min`)+sum(`Nombre trains en retard > 30min`)+sum(`Nombre trains en retard > 15min`)))
+  SNCF_regularite_modif <- trainpack::SNCF_regularite %>%
+    select(annee,mois,gare_de_depart,nombre_de_trains_annules,nombre_de_circulations_prevues,
+           nombre_de_trains_en_retard_a_l_arrivee,gare_d_arrivee,nombre_trains_en_retard_15min,
+           nombre_trains_en_retard_30min,nombre_trains_en_retard_60min) %>%
+    group_by(gare_d_arrivee,gare_de_depart,mois) %>%
+    summarise(proportion_trains_en_retard_15min = sum(nombre_trains_en_retard_15min)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)),
+              proportion_trains_en_retard_30min = sum(nombre_trains_en_retard_30min)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)),
+              proportion_trains_en_retard_60min = sum(nombre_trains_en_retard_60min)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)),
+              proportion_trains_annules = sum(nombre_de_trains_annules)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)))
 
-  res <- SNCF_regularite_modif %>%
-    filter( `Gare d'arrivée`== gareA & `Gare de départ` == gareD & Mois == mois)
+  res <- SNCF_regularite_modif %>% filter(gare_d_arrivee == gareA & gare_de_depart == gareD & mois == mois)
 
   return((res[,4:7]))
 }

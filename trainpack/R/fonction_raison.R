@@ -1,24 +1,26 @@
 #' fonction_raison function
 #'
-#' @param gareA 
-#' @param gareB 
-#' @param mois 
+#' @param gareA the name of the departure railway station.
+#' Must be one of the stations in the dataframe \code{SNCF_regularite}.
+#' @param gareB the name of the arrival railway station.
+#' Must be one of the stations in the dataframe \code{SNCF_regularite}.
+#' @param mois month when the train goes from \code{gareA} to \code{gareB}.
 #'
 #' @return a summary of the most probable reasons for a train to be late
 #' @import dplyr
-#' @export 
+#' @export
 #'
 #' @examples fonction_raison("PARIS MONTPARNASSE", "NANTES", 4)
 
 
 fonction_raison <- function(gareA, gareB, mois){
-  raison <- SNCF_regularite %>%
-    filter(`Gare de départ` == gareA, `Gare d'arrivée` == gareB, Mois == mois) %>% 
-    summarise(`cause externe` = mean(`% trains en retard pour causes externes (météo, obstacles, colis suspects, malveillance, mouvements sociaux, etc.)`),
-              `infrastructure` = mean(`% trains en retard à cause infrastructure ferroviaire (maintenance, travaux)`),
-              `gestion trafic` = mean(`% trains en retard à cause gestion trafic (circulation sur ligne ferroviaire, interactions réseaux)`),
-              `materiel roulant` = mean(`% trains en retard à cause matériel roulant`),
-              `gestion en gare` = mean(`% trains en retard à cause gestion en gare et réutilisation de matériel`),
-              `prise en compte voyageur` = mean(`% trains en retard à cause prise en compte voyageurs (affluence, gestions PSH, correspondances)`))
+  raison <- trainpack::SNCF_regularite %>%
+    filter(gare_de_depart == gareA, gare_d_arrivee == gareB, mois == mois) %>%
+    summarise(cause_externe = mean(retard_pour_causes_externes),
+              infrastructure = mean(retard_a_cause_infrastructure_ferroviaire),
+              gestion_trafic = mean(retard_a_cause_gestion_trafic),
+              materiel_roulant = mean(retard_a_cause_materiel_roulant),
+              gestion_en_gare = mean(retard_a_cause_gestion_en_gare_et_reutilisation_de_materiel),
+              prise_en_compte_voyageur = mean(retard_a_cause_prise_en_compte_voyageurs))
   return(raison)
 }
