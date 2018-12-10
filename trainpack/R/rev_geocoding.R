@@ -13,6 +13,6 @@ rev_geocoding <- function(lat, lon)
 {
   d <- jsonlite::fromJSON(gsub("\\@lon\\@", lon, gsub("\\@lat\\@", lat,
                                                       'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=@lat@&lon=@lon@&zoom=18&addressdetails=1')))
-  if(length(d) == 0) return(data.frame())
+  if(length(d) == 0) return(data.frame(postcode = 0))
   return(data.frame(postcode = as.numeric(d$address$postcode)))
 }
