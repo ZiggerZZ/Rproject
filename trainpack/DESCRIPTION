@@ -15,5 +15,6 @@ Suggests:
 VignetteBuilder: knitr
 Imports: 
     dplyr,
-    magick
+    magick,
+    jsonlite
 RoxygenNote: 6.1.0
