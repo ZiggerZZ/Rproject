@@ -5,7 +5,8 @@
 #' @param mois 
 #'
 #' @return a summary of the most probable reasons for a train to be late
-#' @export dplyr
+#' @import dplyr
+#' @export 
 #'
 #' @examples fonction_raison("PARIS MONTPARNASSE", "NANTES", 4)
 
