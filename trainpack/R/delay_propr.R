@@ -14,7 +14,7 @@
 #' @examples delay_propr("PARIS MONTPARNASSE", "NANTES", 12)
 delay_propr <- function(gareD,gareA,mois){
   SNCF_regularite_modif <- SNCF_regularite %>%
-    select(Année,Mois,`Gare de départ`,`Nombre de trains annulés`,`Nombre de circulations prévues`,`Nombre de trains en retard à l'arrivée`,`Gare d'arrivée`,`Nombre trains en retard > 15min`,`Nombre trains en retard > 30min`,`Nombre trains en retard > 60min`) %>%
+    select(`Année`,Mois,`Gare de départ`,`Nombre de trains annulés`,`Nombre de circulations prévues`,`Nombre de trains en retard à l'arrivée`,`Gare d'arrivée`,`Nombre trains en retard > 15min`,`Nombre trains en retard > 30min`,`Nombre trains en retard > 60min`) %>%
     mutate(`Gare d'arrivée` = as.character(`Gare d'arrivée`),
            `Gare de départ` = as.character(`Gare de départ`),
            Mois = as.integer(Mois)) %>%
