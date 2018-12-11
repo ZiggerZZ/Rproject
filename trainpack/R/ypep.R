@@ -3,6 +3,7 @@
 #' @param char a string
 #'
 #' @import magick
+#' @importFrom stats runif
 #'
 #' @return pepy
 #' @export

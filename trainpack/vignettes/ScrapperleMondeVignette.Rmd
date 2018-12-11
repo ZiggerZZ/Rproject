@@ -1,12 +1,14 @@
 ---
 title: "ScrapperLeMondeVignette"
 author: "Tristan Mayer"
-date: "10 December 2018"
-output:
-  html_document:
-    df_print: paged
-vignette: null
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
 # How did we get the data from Le Monde?
 One feature of our application is to provide few facts that might help to the person who is going to place his/her bet on the train evaluating how reliable is the odd we give.
 As part of these facts, we want to see if it is likely for the trains to be late because of a strike.
