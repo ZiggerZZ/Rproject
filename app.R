@@ -1,21 +1,37 @@
 ## SHINY
 library(dplyr)
 library(ggplot2)
-
+library(shiny)
+library(trainpack)
+library(tidyr) 
 app_analysisUI <- function(id){
   
   ns <- NS(id)
   tagList(
     sidebarLayout(
       sidebarPanel(
-        selectInput(ns("gareD"),label = "choose your depart station",choices = SNCF_regularite %>% select("Gare.de.départ") %>% distinct()),
-        selectInput(ns("gareA"),label = "choose your destination station",choices = SNCF_regularite %>% select("Gare.d.arrivée") %>% distinct()),
+       selectInput(ns("gareD"),
+                   label = "choose your depart station",
+                   choices =  SNCF_regularite 
+                   %>% select(gare_de_depart) %>% distinct()),
+        selectInput(ns("gareA"),
+                    label = "choose your destination station",
+                    choices ="" ),
         selectInput(ns("mois"),label = "Month",choices = month.abb),
-        selectInput(ns("axeX"),label = "Axe X ",choices = c("Reason of delay","Time of delay")),
+        selectInput(ns("axeX"),label = "Axe X ",choices = c("Reason of delay","Time of delay","Period")),
+        conditionalPanel(paste0("input['",
+                                ns("axeX"),
+                                "'] == 'Period' ")
+                         ,
+                          selectInput(ns("axeY"), "Axe Y", choices = c("Proportion of reasons of delay","Proportion of times of delay"),selected ="Proportion of reasons of delay" )
+        ),
         actionButton(inputId = ns("go"),label = "Go",icon = icon("GO"))
       ),
       
       mainPanel(
+        conditionalPanel(paste0("input['",
+                                ns("axeX"),
+                                "'] != 'Period' "),
         tabsetPanel(
           tabPanel(title = "Graph",
                    plotOutput(ns("plot_delay"))
@@ -23,8 +39,21 @@ app_analysisUI <- function(id){
           tabPanel(title = "Data",
                    DT::DTOutput(ns("dataset"))
           )
+        )
           
-          
+        ),
+        conditionalPanel(paste0("input['",
+                                ns("axeX"),
+                                "'] == 'Period' "),
+                         tabsetPanel(
+                           tabPanel(title = "Graph2",
+                                    plotOutput(ns("plot_delay2"))
+                           ),
+                           tabPanel(title = "Data",
+                                    DT::DTOutput(ns("dataset2"))
+                           )
+                         )
+                         
         )
         
       )
@@ -38,8 +67,8 @@ app_gameUI <- function(id){
     sidebarLayout(
       sidebarPanel(
         checkboxGroupInput(inputId = ns("choix"),label = "delay or on time",choices = c("Delay" = "D", "On time" = "O"),selected = c("D")),
-        selectInput(ns("gareD"),label = "choose your depart station",choices = SNCF_regularite %>% select("Gare.de.départ") %>% distinct()),
-        selectInput(ns("gareA"),label = "choose your destination station",choices = SNCF_regularite %>% select("Gare.d.arrivée") %>% distinct()),
+        selectInput(ns("gareD"),label = "choose your depart station",choices = SNCF_regularite %>% select(gare_de_depart) %>% distinct()),
+        selectInput(ns("gareA"),label = "choose your destination station",choices = SNCF_regularite %>% select(gare_d_arrivee) %>% distinct()),
         selectInput(ns("mois"),label = "Month",choices = month.abb),
         numericInput(ns("bet"),label = " Choose youre bet",
           value = 50, min = 0, max = 100000, step = 1),
@@ -55,7 +84,12 @@ app_gameUI <- function(id){
 
 
 app_analysis <- function(input, output,session){
-  
+  observe({
+    updateSelectInput(session,
+                      "gareA",
+                      choices=SNCF_regularite %>% filter(gare_de_depart == input$gareD)
+                      %>% select(gare_d_arrivee) %>% distinct() %>% pull())
+    })
   data_month <- reactive({
     req(input$mois)
     which(month.abb == input$mois)
@@ -70,35 +104,90 @@ app_analysis <- function(input, output,session){
     input$gareD
     
   })
-
-  dataset <- reactiveValues(x = rnorm(100))
+  data_axeX <- reactive({
+    input$axeX
+  })
+  data_axeY <- reactive({
+    input$axeY
+  })
+  
+  dataset <- reactiveValues(x =rnorm(100))
+  dataset2 <- reactiveValues(x= rnorm(100))
+  axex <- reactiveValues(x =rnorm(100))
+  axey <- reactiveValues(x =rnorm(100))
+    
   observe({
-    
-    if( input$axeX == "Reason of delay" ){
-      
-      
-      dataset$x <- fonction_raison(data_gareD(),data_gareA(),data_month()) 
-    
-    } else if ( input$axeX == "Time of delay" ) {
-      
+    if( data_axeX() == "Reason of delay" ){
+      dataset$x <- fonction_raison(data_gareD(),data_gareA(),data_month())
+      axex$x <- "Different reasons of delay"
+      axey$x <- "Proportion of reasons of delay"
+    } else if ( data_axeX() == "Time of delay" ) {
       dataset$x <- delay_propr(data_gareD(),data_gareA(),data_month())
+      axex$x <- "Different times of delay"
+      axey$x <- "Proportion of times of delay"
     }
+    else if ( data_axeX() == "Period" && data_axeY() == "Proportion of reasons of delay") {
+      a <- data.frame(as.numeric(fonction_raison(data_gareD(),data_gareA(),1)))
+      for (i in 2:12) {
+      a <- data.frame(a,as.numeric(fonction_raison(data_gareD(),data_gareA(),i)))
+      } 
+      names(a) <- month.abb
+      a <- data.frame(names(fonction_raison("PARIS MONTPARNASSE", "NANTES", 4)),a)
+      names(a)[1] <- "Types"
+      dataset2$x <- a
+      axex$x <- "Period"
+        axey$x <- "Proportion of reasons of delay"
+    }
+    else if ( data_axeX() == "Period" && data_axeY() == "Proportion of times of delay") {
+      a <- data.frame(as.numeric(delay_propr(data_gareD(),data_gareA(),1)))
+      for (i in 2:12) {
+        a <- data.frame(a,as.numeric(delay_propr(data_gareD(),data_gareA(),i)))
+      }
+      names(a) <- month.abb
+      a <- data.frame(names(delay_propr("PARIS MONTPARNASSE", "NANTES", 4)),a)
+      names(a)[1] <- "Types"
+      dataset2$x <- a
+      axex$x <- "Period"
+      axey$x <- "Proportion of times of delay"
+    }
+  })
+  data <- eventReactive(input$go,{
+    dataset$x
+  })
+  data2 <- eventReactive(input$go,{
+    dataset2$x
+  })
+  
+    ax <- eventReactive(input$go,{
+    axex$x
+  })
+  ay <- eventReactive(input$go,{
+    axey$x
+  })
+  
+  output$plot_delay <- renderPlot({
+    d<- data()
+    df <- data.frame(x= names(d),y = d [1,] )
+    ggplot(data = df,aes( x = names(d), y= as.numeric(d[1,]))) + 
+      geom_bar(stat = "identity",fill="steelblue") + 
+      xlab(ax()) + ylab(ay()) + theme_minimal() + 
+      theme(axis.text=element_text(size=14,face="bold"),
+           axis.title.x  =element_text(size=14,face="bold",vjust = -1),
+    axis.title.y  =element_text(size=14,face="bold",vjust= 3))
     
+      })
+  
+  output$plot_delay2 <- renderPlot({
+    d<- data2()
+    d %>% gather(month,value,Jan:Dec) %>% ggplot() + aes(month,value,fill=Types) + geom_col()
   })
   
 
-  
-  
-  output$plot_delay <- renderPlot({
-    d<- dataset$x
-    df <- data.frame(x=names(d),y=as.numeric( d[1,]))
-    ggplot(data = df,aes( x = x, y= y)) + 
-      geom_bar(stat = "identity")
-      })
-  
-
   output$dataset <- DT::renderDT({
-    d
+    data()[1,]
+  })
+  output$dataset2 <- DT::renderDT({
+    data2()
   })
   
 
@@ -132,7 +221,7 @@ app_game <- function(input, output,session){
   })
   
   output$Result <- renderText({
-    glue::glue("The result is {cote()*data_bet()} ")
+    glue::glue("The Potential Gain {cote()*data_bet()} ")
     })
   
   
