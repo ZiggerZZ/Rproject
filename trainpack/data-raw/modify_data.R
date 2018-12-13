@@ -1,5 +1,6 @@
 library(readr)
 library(dplyr)
+library(sf)
 
 SNCF_regularite <- read_delim("data-raw/regularite-mensuelle-tgv-aqst.csv", delim = ";", locale = locale(decimal_mark = ".")) #grouping_mark = ","
 SNCF_regularite <- SNCF_regularite %>% mutate_at(vars(`Retard pour causes externes`,`Retard à cause infrastructure ferroviaire`,
@@ -28,5 +29,16 @@ names(SNCF_regularite) <-
 lemonde_dates <- read_csv("data-raw/LeMondefr_Articles_dates.csv")
 lemonde_dates <- lemonde_dates %>% select(-X1)
 
+departement <- st_read(dsn = 'data-raw/departements/',
+                       layer = 'DEPARTEMENT',
+                       quiet = TRUE) %>%
+  group_by(CODE_DEPT, NOM_REG) %>%
+  summarise()
+
+cote_tbl <- read_csv("data-raw/cote_tbl.csv")
+cote_tbl <- cote_tbl %>% select(-X1)
+
 usethis::use_data(SNCF_regularite, overwrite = TRUE, internal = FALSE)
 usethis::use_data(lemonde_dates, overwrite = TRUE, internal = FALSE)
+usethis::use_data(departement, overwrite = TRUE, internal = FALSE)
+usethis::use_data(cote_tbl, overwrite = TRUE, internal = FALSE)
