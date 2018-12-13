@@ -193,7 +193,7 @@ app_analysis <- function(input, output,session){
 
   output$plot_delay2 <- renderPlot({
     d<- data2()
-    d %>% gather(month,value,Jan:Dec) %>% ggplot() + aes(month,value,fill=Types) + geom_col()
+    d %>% gather(month,value,Jan:Dec) %>% ggplot() + aes(month,value,fill=Types) + geom_col() + scale_x_discrete(limits = month.abb)
   })
 
 
@@ -279,10 +279,18 @@ ui <- dashboardPage(skin="green",
                       tabItems(
 
                         tabItem(tabName ="Presentation" ,
-                                fluidPage(
+                                fluidRow(
                                   box(width = 16,
-                                      htmlOutput("information_text")
-                                  )
+                                      htmlOutput("information_text"))),
+                                fluidRow(
+                                  
+                                  box(width = 16,
+                                      title = "The team",
+                                      status = "primary",
+                                      solidHeader = TRUE,
+                                      collapsible = TRUE,
+                                      htmlOutput("team")
+                                        )
                                 )),
                         tabItem ( tabName = "Bet",
                                   app_gameUI("game")
@@ -301,17 +309,19 @@ ui <- dashboardPage(skin="green",
 server <- function(input, output) {
   callModule(app_game,"game")
   callModule(app_analysis,"analysis")
+  output$team <- renderText({
+    paste("<h4>We are 5 passionate students willing to have some fun while waiting for our delayed trains","<h5> Xavier de Boisredon - Tristan Mayer - Alexandre Miny de Tornaco - Hossein Talebi - Zigfrid Zvezdin")
+  })
+  
   output$information_text <- renderText({
 
     paste("<h3>You bought a train ticket but you are worry to arrive late?
           <h3>You think you can predict when a train is going to arrive late?
           <h3>You are bored with train delays and want to monetize your waiting time?
           <h2>Come and bet on our app!
-          <h4>A team of incredible data scientists has performed deep analysis and came up with the best odds on the market. 
-          They created this application to bet on a train delay.
-          If you think that the train from Paris Montparnasse to Nantes that leaves tomorrow is going to arrive more than 15 minutes after its announced arrival time, place a bet on this application and win money if your prediction is true.
-          <h2>Team:
-          <h3>Xavier de Boisredon - Tristan Mayer - Alexandre Miny de Tornaco - Hossein Talebi - Zigfrid Zvezdin"
+          <h4>A team of incredible data scientists has performed deep analysis of the SNCF datasets and came up with the best odds on the market. 
+          They created this application to bet on trains delays.
+          If you think that the train your taking tomorrow is going to arrive more than 15 minutes after its announced arrival time, place a bet on this application and win money if your prediction is true."
           )
 
 })
