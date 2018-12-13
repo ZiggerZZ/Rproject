@@ -247,7 +247,7 @@ app_game <- function(input, output,session){
   bet <- eventReactive(input$go,{data_bet()})
 
   output$Result <- renderText({
-    paste("<h4>Since you bet",bet(),"€","with a rate of",round(cote(),2),
+    paste("<h4>Since you bet",bet(),"€","with an odd of",round(cote(),2),
           "your potential gain is ","<br> <h2> <font color=\"#FF0000\"> <b>",
           round(gain(),0),"€")
   })
@@ -303,14 +303,17 @@ server <- function(input, output) {
   callModule(app_analysis,"analysis")
   output$information_text <- renderText({
 
-    paste("<h4> BLA BLA BLA
-          La régularité TGV tient compte des différentes durées de trajet des clients (aussi appelée composite).
-          Un train est considéré à l'heure si son retard au terminus estDécouvrez la régularité mensuelle TGV par liaisons (AQST).
-          La régularité TGV tient compte des différentes durées de trajet des clients (aussi appelée composite).
-          Un train est considéré à l'heure si son retard au terminus est inférieur à 5min pour un parcours inférieur à 1h30
-          Un train est considéré à l'heure si son retard au terminus est inférieur à 10min pour un parcours entre 1h30 et 3h
-          Un train est considéré à l'heure si son retard au terminus est inférieur à 15min pour un parcours au-delà de 3h
-          Les horaires d'arrivée sont également déterminés par des capteurs détectant le passage du train à un point déterminé marquant l'entrée en gare et exceptionnellement par des suivis manuel. La précision des mesures est la minute arrondie à minute inférieure, ce qui est conforme à l'ensemble des normes retenues pour la confection des horaires et chronogrammes de service.")
-  })
+    paste("<h3>You bought a train ticket but you are worry to arrive late?
+          <h3>You think you can predict when a train is going to arrive late?
+          <h3>You are bored with train delays and want to monetize your waiting time?
+          <h2>Come and bet on our app!
+          <h4>A team of incredible data scientists has performed deep analysis and came up with the best odds on the market. 
+          They created this application to bet on a train delay.
+          If you think that the train from Paris Montparnasse to Nantes that leaves tomorrow is going to arrive more than 15 minutes after its announced arrival time, place a bet on this application and win money if your prediction is true.
+          <h2>Team:
+          <h3>Xavier de Boisredon - Tristan Mayer - Alexandre Miny de Tornaco - Hossein Talebi - Zigfrid Zvezdin"
+          )
+
+})
 }
 shinyApp(ui,server)
