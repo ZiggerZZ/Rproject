@@ -1,7 +1,7 @@
 #' rev_geocoding_country
 #'
-#' @param lat 
-#' @param lon 
+#' @param lat latitude of the departement 
+#' @param lon longitude of the departement
 #'
 #' @return country (char)
 #' @export
