@@ -1,5 +1,7 @@
 #' fonction_temps_moyen function
 #'
+#' @author Alexandre Miny
+#'
 #' @param gareA the name of the departure railway station.
 #' Must be one of the stations in the dataframe \code{SNCF_regularite}.
 #' @param gareB the name of the arrival railway station.

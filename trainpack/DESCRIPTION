@@ -11,7 +11,8 @@ BugReport: https://github.com/ZiggerZZ/Rproject
 URL: ourwebsiteXAVIERtulefera?.com
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 Imports:
     dplyr,
