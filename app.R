@@ -9,6 +9,8 @@
 
 library(shiny)
 library(shinydashboard)
+library(dplyr)
+library(tidyverse)
 
 app_analysisUI <- function(id){
 
@@ -18,7 +20,7 @@ app_analysisUI <- function(id){
       sidebarPanel(
         selectInput(ns("gareD"),
                     label = "choose your depart station",
-                    choices =  SNCF_regularite
+                    choices =  trainpack::SNCF_regularite
                     %>% select(gare_de_depart) %>% distinct()),
         selectInput(ns("gareA"),
                     label = "choose your destination station",
@@ -52,7 +54,7 @@ app_analysisUI <- function(id){
                                 ns("axeX"),
                                 "'] == 'Period' "),
                          tabsetPanel(
-                           tabPanel(title = "Graph2",
+                           tabPanel(title = "Graph",
                                     plotOutput(ns("plot_delay2"))
                            ),
                            tabPanel(title = "Data",
@@ -74,7 +76,7 @@ app_gameUI <- function(id){
       sidebarPanel(
         selectInput(ns("gareD"),
                     label = "choose your depart station",
-                    choices =  SNCF_regularite
+                    choices =  trainpack::SNCF_regularite
                     %>% select(gare_de_depart) %>% distinct()),
         selectInput(ns("gareA"),
                     label = "choose your destination station",
@@ -99,7 +101,7 @@ app_analysis <- function(input, output,session){
   observe({
     updateSelectInput(session,
                       "gareA",
-                      choices=SNCF_regularite %>% filter(gare_de_depart == input$gareD)
+                      choices=trainpack::SNCF_regularite %>% filter(gare_de_depart == input$gareD)
                       %>% select(gare_d_arrivee) %>% distinct() %>% pull())
   })
   data_month <- reactive({
@@ -185,8 +187,8 @@ app_analysis <- function(input, output,session){
       xlab(ax()) + ylab(ay()) + theme_minimal() +
       theme(axis.text=element_text(size=14,face="bold"),
             axis.title.x  =element_text(size=14,face="bold",vjust = -1),
-            axis.title.y  =element_text(size=14,face="bold",vjust= 3))
-
+            axis.title.y  =element_text(size=14,face="bold",vjust= 3)) +
+      theme(axis.text.x = element_text(angle=60, hjust=1))
   })
 
   output$plot_delay2 <- renderPlot({
@@ -210,7 +212,7 @@ app_game <- function(input, output,session){
   observe({
     updateSelectInput(session,
                       "gareA",
-                      choices=SNCF_regularite %>% filter(gare_de_depart == input$gareD)
+                      choices=trainpack::SNCF_regularite %>% filter(gare_de_depart == input$gareD)
                       %>% select(gare_d_arrivee) %>% distinct() %>% pull())
   })
   data_month <- reactive({
@@ -238,13 +240,16 @@ app_game <- function(input, output,session){
 
   })
 
-  cote <- eventReactive(input$go,{
-    fonction_cote(data_gareD(),data_gareA(),data_month())
-  })
+  gain <- eventReactive(input$go,{fonction_cote(data_gareD(),data_gareA(),data_month()) * data_bet()})
+
+  cote <- eventReactive(input$go,{fonction_cote(data_gareD(),data_gareA(),data_month())})
+
+  bet <- eventReactive(input$go,{data_bet()})
 
   output$Result <- renderText({
-    paste("<b>The Potential Gain is ","<font color=\"#FF0000\"><b>",cote()*data_bet(),"<font color=\"#FF0000\"><b>")
-    #glue::glue("**The Potential Gain is** {cote()*data_bet()} ")
+    paste("<h4>Since you bet",bet(),"€","with a rate of",round(cote(),2),
+          "your potential gain is ","<br> <h2> <font color=\"#FF0000\"> <b>",
+          round(gain(),0),"€")
   })
 
 
@@ -253,43 +258,46 @@ app_game <- function(input, output,session){
 
 
 ui <- dashboardPage(skin="green",
-  dashboardHeader( title = "Train Betting APP"),
-  dashboardSidebar(
-    sidebarMenu(
-      menuItem("Presentation",tabName = "Presentation", icon = icon("home")),
-    menuItem("Bet",tabName = "Bet", icon = icon("money")),
-    menuItem("Information",tabName = "Information", icon = icon("info"))
+                    dashboardHeader( title = "Train Betting App"),
+                    dashboardSidebar(
+                      sidebarMenu(
+                        menuItem("Presentation",tabName = "Presentation", icon = icon("home")),
+                        menuItem("Bet",tabName = "Bet", icon = icon("money")),
+                        menuItem("Information",tabName = "Information", icon = icon("info"))
 
-                  )),
+                      )),
 
-  dashboardBody(
-  tabItems(
+                    dashboardBody(
+                      tags$head(tags$style(HTML('
+                                .main-header .logo {
+                                                font-family: "Georgia", Times, "Times New Roman", serif;
+                                                font-weight: bold;
+                                                font-size: 20px;
+                                                }
+                                                '))),
+                      tabItems(
 
-    tabItem(tabName ="Presentation" ,
-            fluidPage(
-
-
-                          box(width = 16,
-                              htmlOutput("information_text")
-            )
-            )),
-    tabItem ( tabName = "Bet",
-             app_gameUI("game")
-
-    ),
-    tabItem ( tabName = "Information",
-              app_analysisUI("analysis")
-
-    )
+                        tabItem(tabName ="Presentation" ,
+                                fluidPage(
 
 
-            )
-  )
-  )
+                                  box(width = 16,
+                                      htmlOutput("information_text")
+                                  )
+                                )),
+                        tabItem ( tabName = "Bet",
+                                  app_gameUI("game")
+
+                        ),
+                        tabItem ( tabName = "Information",
+                                  app_analysisUI("analysis")
+
+                        )
 
 
-
-
+                      )
+                    )
+)
 
 
 server <- function(input, output) {
@@ -298,7 +306,6 @@ server <- function(input, output) {
   output$information_text <- renderText({
     paste("<h4> BLA BLA BLA
           La régularité TGV tient compte des différentes durées de trajet des clients (aussi appelée composite).
-
           Un train est considéré à l'heure si son retard au terminus estDécouvrez la régularité mensuelle TGV par liaisons (AQST).
           La régularité TGV tient compte des différentes durées de trajet des clients (aussi appelée composite).
           Un train est considéré à l'heure si son retard au terminus est inférieur à 5min pour un parcours inférieur à 1h30
