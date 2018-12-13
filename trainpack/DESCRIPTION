@@ -17,5 +17,6 @@ Imports:
     dplyr,
     magick,
     stats,
-    jsonlite
+    jsonlite,
+    sf
 RoxygenNote: 6.1.0
