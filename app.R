@@ -252,26 +252,17 @@ app_game <- function(input, output,session){
 
 
 
-ui <- dashboardPage(
+ui <- dashboardPage(skin="green",
   dashboardHeader( title = "Train Betting APP"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Presentation",tabName = "Presentation", icon = icon("dashboard"))
-                ,
-    menuItem("Bet",tabName = "Bet", icon = icon("dashboard")),
-    menuItem("Information",tabName = "Information", icon = icon("dashboard"))
+      menuItem("Presentation",tabName = "Presentation", icon = icon("home")),
+    menuItem("Bet",tabName = "Bet", icon = icon("money")),
+    menuItem("Information",tabName = "Information", icon = icon("info"))
 
                   )),
 
   dashboardBody(
-      tags$head(tags$style(HTML('
-                                .main-header .logo {
-                                font-family: "Georgia", Times, "Times New Roman", serif;
-                                font-weight: bold;
-                                font-size: 32px;
-                                }
-                                '))),
-
   tabItems(
 
     tabItem(tabName ="Presentation" ,
