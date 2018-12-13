@@ -13,14 +13,13 @@
 #' @examples fonction_raison("PARIS MONTPARNASSE", "NANTES", 4)
 
 
-fonction_raison <- function(gareA, gareB, mois){
-  raison <- trainpack::SNCF_regularite %>%
-    filter(gare_de_depart == gareA, gare_d_arrivee == gareB, mois == mois) %>%
+fonction_raison <- function(gareA, gareB, month){
+  trainpack::SNCF_regularite %>%
+    filter(gare_de_depart == gareA, gare_d_arrivee == gareB, mois == month) %>%
     summarise(cause_externe = mean(retard_pour_causes_externes),
               infrastructure = mean(retard_a_cause_infrastructure_ferroviaire),
               gestion_trafic = mean(retard_a_cause_gestion_trafic),
               materiel_roulant = mean(retard_a_cause_materiel_roulant),
               gestion_en_gare = mean(retard_a_cause_gestion_en_gare_et_reutilisation_de_materiel),
               prise_en_compte_voyageur = mean(retard_a_cause_prise_en_compte_voyageurs))
-  return(raison)
 }

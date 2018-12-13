@@ -15,9 +15,9 @@
 #'
 #'
 
-fonction_cote <- function(gareA, gareB, mois){
+fonction_cote <- function(gareA, gareB, month){
   cote <- trainpack::SNCF_regularite %>%
-    filter(gare_de_depart == gareA, gare_d_arrivee == gareB, mois == mois) %>%
+    filter(gare_de_depart == gareA, gare_d_arrivee == gareB, mois == month) %>%
     mutate(proportion_de_trains_en_retard = (nombre_de_trains_annules + retard_moyen_trains_en_retard_15min)/nombre_de_circulations_prevues) %>%
     summarise(cote = 1/mean(proportion_de_trains_en_retard))
   return(as.numeric(cote))

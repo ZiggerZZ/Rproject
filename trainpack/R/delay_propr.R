@@ -12,12 +12,10 @@
 #' @export
 #'
 #' @examples delay_propr("PARIS MONTPARNASSE", "NANTES", 12)
-delay_propr <- function(gareD,gareA,mois){
-  res <- trainpack::SNCF_regularite %>%filter(gare_d_arrivee == gareA & gare_de_depart == gareD & mois == mois) %>%
+delay_propr <- function(gareD,gareA,month){
+  trainpack::SNCF_regularite %>%filter(gare_d_arrivee == gareA & gare_de_depart == gareD & mois == month) %>%
     summarise(proportion_trains_en_retard_15min = sum(nombre_trains_en_retard_15min)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)),
               proportion_trains_en_retard_30min = sum(nombre_trains_en_retard_30min)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)),
               proportion_trains_en_retard_60min = sum(nombre_trains_en_retard_60min)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)),
               proportion_trains_annules = sum(nombre_de_trains_annules)/(sum(nombre_de_trains_annules)+sum(nombre_trains_en_retard_60min)+sum(nombre_trains_en_retard_30min)+sum(nombre_trains_en_retard_15min)))
-
-  return((res))
 }
