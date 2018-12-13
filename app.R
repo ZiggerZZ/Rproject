@@ -263,7 +263,8 @@ ui <- dashboardPage(skin="green",
                       sidebarMenu(
                         menuItem("Presentation",tabName = "Presentation", icon = icon("home")),
                         menuItem("Bet",tabName = "Bet", icon = icon("money")),
-                        menuItem("Information",tabName = "Information", icon = icon("info"))
+                        menuItem("Information",tabName = "Information", icon = icon("info")),
+                        menuItem("Mapping",tabName = "Map", icon = icon("map"))
 
                       )),
 
@@ -279,8 +280,6 @@ ui <- dashboardPage(skin="green",
 
                         tabItem(tabName ="Presentation" ,
                                 fluidPage(
-
-
                                   box(width = 16,
                                       htmlOutput("information_text")
                                   )
@@ -292,11 +291,10 @@ ui <- dashboardPage(skin="green",
                         tabItem ( tabName = "Information",
                                   app_analysisUI("analysis")
 
+                        ),
+                        tabItem (tabName = "Map")
                         )
-
-
-                      )
-                    )
+                               )
 )
 
 
@@ -304,6 +302,7 @@ server <- function(input, output) {
   callModule(app_game,"game")
   callModule(app_analysis,"analysis")
   output$information_text <- renderText({
+
     paste("<h4> BLA BLA BLA
           La régularité TGV tient compte des différentes durées de trajet des clients (aussi appelée composite).
           Un train est considéré à l'heure si son retard au terminus estDécouvrez la régularité mensuelle TGV par liaisons (AQST).
