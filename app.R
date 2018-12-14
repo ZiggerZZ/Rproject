@@ -301,16 +301,13 @@ ui <- dashboardPage(skin="green",
                                     app_analysisUI("analysis")
                                   ),
                                   fluidRow(
-                                    column(width=5,
-                                           box(title = "Number of articles on LeMonde.fr containing the words 'grève SNCF' this month",
-                                               solidHeader = TRUE,
-                                               htmlOutput("monde")
+                                    column(width=10,
+                                           box(title = "Web Scrapping Analysis",
+                                               solidHeader = FALSE,
+                                               selectInput(inputId = "choix_date",label = "Month",choices = month.abb),
+                                               actionButton(inputId = "go2",label = "Go",icon = icon("GO"))
                                            ),
-                                           box(title = "Wanna see SNCF's CEO ?",
-                                               solidHeader = TRUE,
-                                               textInput("pepy",label=NULL, value = NULL),
-                                               plotOutput("pp")
-                                           )
+                                           htmlOutput("monde")
                                     )
                                   )
                         ),
@@ -323,6 +320,13 @@ ui <- dashboardPage(skin="green",
 server <- function(input, output) {
   callModule(app_game,"game")
   callModule(app_analysis,"analysis")
+
+  fct_art <- reactive({fonction_article(input$choix_date)})
+  articles <- eventReactive(input$go2,{fct_art()})
+  output$monde <- renderText({
+    paste("<h4> There were","<b> <font color=\"#FF0000\"> ", articles(),"</b> </font color=\"#FF0000\"> articles on LeMonde.fr containing the words 'grève SNCF' this month")
+    })
+
   output$team <- renderText({
     paste("<h4>We are 5 passionate students willing to have some fun while waiting for our delayed trains","<h5> Xavier de Boisredon - Tristan Mayer - Alexandre Miny de Tornaco - Hossein Talebi - Zigfrid Zvezdin")
   })
