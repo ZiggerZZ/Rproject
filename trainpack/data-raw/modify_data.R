@@ -38,7 +38,11 @@ departement <- st_read(dsn = 'data-raw/departements/',
 
 cote_tbl <- read_csv("data-raw/cote_tbl.csv")
 cote_tbl <- cote_tbl %>% select(-X1)
-
+cote_tbl["CODE_DEPT"] <- cote_tbl %>%
+  select(CODE_DEPT) %>%
+  rowwise() %>%
+  mutate(CODE_DEPT = as.integer(CODE_DEPT))
+                                                 
 usethis::use_data(SNCF_regularite, overwrite = TRUE, internal = FALSE)
 usethis::use_data(lemonde_dates, overwrite = TRUE, internal = FALSE)
 usethis::use_data(departement, overwrite = TRUE, internal = FALSE)
