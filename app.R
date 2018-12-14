@@ -270,7 +270,7 @@ ui <- dashboardPage(skin="green",
 
                     dashboardBody(
                       tags$head(tags$style(HTML('
-                                .main-header .logo {
+                                                .main-header .logo {
                                                 font-family: "Georgia", Times, "Times New Roman", serif;
                                                 font-weight: bold;
                                                 font-size: 20px;
@@ -283,27 +283,41 @@ ui <- dashboardPage(skin="green",
                                   box(width = 16,
                                       htmlOutput("information_text"))),
                                 fluidRow(
-                                  
+
                                   box(width = 16,
                                       title = "The team",
                                       status = "primary",
                                       solidHeader = TRUE,
                                       collapsible = TRUE,
                                       htmlOutput("team")
-                                        )
+                                  )
                                 )),
                         tabItem ( tabName = "Bet",
                                   app_gameUI("game")
 
                         ),
                         tabItem ( tabName = "Information",
-                                  app_analysisUI("analysis")
-
+                                  fluidRow(
+                                    app_analysisUI("analysis")
+                                  ),
+                                  fluidRow(
+                                    column(width=5,
+                                           box(title = "Number of articles on LeMonde.fr containing the words 'grève SNCF' this month",
+                                               solidHeader = TRUE,
+                                               htmlOutput("monde")
+                                           ),
+                                           box(title = "Wanna see SNCF's CEO ?",
+                                               solidHeader = TRUE,
+                                               textInput("pepy",label=NULL, value = NULL),
+                                               plotOutput("pp")
+                                           )
+                                    )
+                                  )
                         ),
                         tabItem (tabName = "Map")
-                        )
-                               )
-)
+                      )
+                      )
+                      )
 
 
 server <- function(input, output) {
@@ -312,18 +326,19 @@ server <- function(input, output) {
   output$team <- renderText({
     paste("<h4>We are 5 passionate students willing to have some fun while waiting for our delayed trains","<h5> Xavier de Boisredon - Tristan Mayer - Alexandre Miny de Tornaco - Hossein Talebi - Zigfrid Zvezdin")
   })
-  
+
   output$information_text <- renderText({
 
     paste("<h3>You bought a train ticket but you are worry to arrive late?
           <h3>You think you can predict when a train is going to arrive late?
           <h3>You are bored with train delays and want to monetize your waiting time?
           <h2>Come and bet on our app!
-          <h4>A team of incredible data scientists has performed deep analysis of the SNCF datasets and came up with the best odds on the market. 
+          <h4>A team of incredible data scientists has performed deep analysis of the SNCF datasets and came up with the best odds on the market.
           They created this application to bet on trains delays.
           If you think that the train your taking tomorrow is going to arrive more than 15 minutes after its announced arrival time, place a bet on this application and win money if your prediction is true."
-          )
+    )
 
-})
+  })
 }
 shinyApp(ui,server)
+
