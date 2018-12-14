@@ -19,7 +19,7 @@ We will use the following packages:
 ```{r, eval = FALSE}
 
 library(trainpack)
-library(tidyverse)
+library(dplyr)
 
 # use data from package
 SNCF_regularite <- trainpack::SNCF_regularite
@@ -85,17 +85,18 @@ sncf_lon_lat_postcode <- sncf_lon_lat_postcode %>%
 Insert cote in the dataframe thanks to the fonction_cote function.
 
 ```{r}
-cote_tbl <- sncf_lon_lat_postcode %>% 
-  mutate(cote = mapply(fonction_cote, gareA = gare_de_depart, gareB = gare_d_arrivee, mois = 12)) 
+
+#cote_tbl <- sncf_lon_lat_postcode %>% mutate(cote = mapply(fonction_cote, gareA = gare_de_depart, gareB = gare_d_arrivee, month = 12)) 
+
 ```
 
 Finally, we save it as a .csv
 ```{r}
 
 # convert to df
-cote_tbl <- as.data.frame(cote_tbl, stringsAsFactors = FALSE)
+#cote_tbl <- as.data.frame(cote_tbl, stringsAsFactors = FALSE)
 
-cote_tbl <- write.csv(cote_tbl, file = "cote_tbl.csv")
+#cote_tbl <- write.csv(cote_tbl, file = "cote_tbl.csv")
 
 ```
 
