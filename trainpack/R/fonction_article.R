@@ -13,7 +13,7 @@
 fonction_article <- function(mois){
   trainpack::lemonde_dates %>% mutate(month = case_when(
     month == "janvier" ~ "Jan",
-    month == "février" ~ "Fev",
+    month == "février" ~ "Feb",
     month == "mars" ~ "Mar",
     month == "avril" ~ "Apr",
     month == "mai" ~ "May",
