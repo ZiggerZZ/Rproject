@@ -28,6 +28,21 @@ names(SNCF_regularite) <-
 
 lemonde_dates <- read_csv("data-raw/LeMondefr_Articles_dates.csv")
 lemonde_dates <- lemonde_dates %>% select(-X1)
+lemonde_dates <- lemonde_dates %>%
+  mutate(month = case_when(
+    month == "janvier" ~ 1,
+    month == "février" ~ 2,
+    month == "mars" ~ 3,
+    month == "avril" ~ 4,
+    month == "mai" ~ 5,
+    month == "juin" ~ 6, 
+    month == "juillet" ~ 7, 
+    month == "août" ~ 8,
+    month == "novembre" ~ 9,
+    month == "octobre" ~ 10,
+    month == "novembre" ~ 11,
+    month == "décembre" ~ 12
+  ))
 
 departement <- st_read(dsn = 'data-raw/departements/',
                        layer = 'DEPARTEMENT',
