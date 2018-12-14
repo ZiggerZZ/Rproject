@@ -35,8 +35,8 @@ lemonde_dates <- lemonde_dates %>%
     month == "mars" ~ 3,
     month == "avril" ~ 4,
     month == "mai" ~ 5,
-    month == "juin" ~ 6, 
-    month == "juillet" ~ 7, 
+    month == "juin" ~ 6,
+    month == "juillet" ~ 7,
     month == "août" ~ 8,
     month == "novembre" ~ 9,
     month == "octobre" ~ 10,
@@ -57,7 +57,7 @@ cote_tbl["CODE_DEPT"] <- cote_tbl %>%
   select(CODE_DEPT) %>%
   rowwise() %>%
   mutate(CODE_DEPT = as.integer(CODE_DEPT))
-                                                 
+
 usethis::use_data(SNCF_regularite, overwrite = TRUE, internal = FALSE)
 usethis::use_data(lemonde_dates, overwrite = TRUE, internal = FALSE)
 usethis::use_data(departement, overwrite = TRUE, internal = FALSE)

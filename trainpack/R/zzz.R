@@ -15,4 +15,5 @@ globalVariables(c("annee", "mois", "sevice", "gare_de_depart", "gare_d_arrivee",
                     "periode","retard_pour_causes_externes","retard_a_cause_infrastructure_ferroviaire",
                     "retard_a_cause_gestion_trafic","retard_a_cause_materiel_roulant",
                     "retard_a_cause_gestion_en_gare_et_reutilisation_de_materiel","retard_a_cause_prise_en_compte_voyageurs",
-                  "proportion_de_trains_en_retard", "cote_tbl", "country_arrivee", "CODE_DEPT", "cote", "departement"))
+                  "proportion_de_trains_en_retard", "cote_tbl", "country_arrivee", "CODE_DEPT", "cote", "departement",
+                  "month", "value", "Jan", "Dec", "Types"))

@@ -4,7 +4,7 @@
 \alias{fonction_cote}
 \title{fonction_cote function}
 \usage{
-fonction_cote(gareA, gareB, mois)
+fonction_cote(gareA, gareB, month)
 }
 \arguments{
 \item{gareA}{the name of the departure railway station.
@@ -13,7 +13,7 @@ Must be one of the stations in the dataframe \code{SNCF_regularite}.}
 \item{gareB}{the name of the arrival railway station.
 Must be one of the stations in the dataframe \code{SNCF_regularite}.}
 
-\item{mois}{month when the train goes from (\code{gareA} to \code{gareB})}
+\item{month}{month when the train goes from (\code{gareA} to \code{gareB})}
 }
 \value{
 odd of the train to be late

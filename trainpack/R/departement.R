@@ -8,5 +8,4 @@
 #'   \item{NOM_REG}{region name}
 #'   \item{geometry}{shape of the department France in crs 2154}
 #'   }
-#' @source \url{https://git.thinkr.fr/xhec/2018/tree/master/assignment/assignment%201/data/departements}
 "departement"

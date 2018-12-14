@@ -3,7 +3,7 @@
 #' @param mois the month witch will be considered in the function
 #' @import dplyr
 #'
-#' @return it will return the value of the mean number of article published on LeMonde.fr for the given month 
+#' @return it will return the value of the mean number of article published on LeMonde.fr for the given month
 #'
 #' @export
 #'

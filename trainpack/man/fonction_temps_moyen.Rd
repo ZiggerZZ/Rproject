@@ -22,6 +22,3 @@ fonction_temps_moyen function
 \examples{
 fonction_temps_moyen(gareA = "METZ", gareB = "PARIS EST")
 }
-\author{
-Alexandre Miny
-}

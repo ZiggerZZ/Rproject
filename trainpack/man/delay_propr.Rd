@@ -4,7 +4,7 @@
 \alias{delay_propr}
 \title{Proportion of Delay times}
 \usage{
-delay_propr(gareD, gareA, mois)
+delay_propr(gareD, gareA, month)
 }
 \arguments{
 \item{gareD}{the name of the departure railway station.
@@ -13,7 +13,7 @@ Must be one of the stations in the dataframe \code{SNCF_regularite}.}
 \item{gareA}{the name of the arrival railway station.
 Must be one of the stations in the dataframe \code{SNCF_regularite}.}
 
-\item{mois}{the month witch will be considered in the function}
+\item{month}{the month which will be considered in the function}
 }
 \value{
 it will return a dataframe with different types of delay times as names of the column and the proportion of each type in the specific month, between two selected stations
