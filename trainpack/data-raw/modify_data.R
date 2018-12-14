@@ -32,6 +32,7 @@ lemonde_dates <- lemonde_dates %>% select(-X1)
 departement <- st_read(dsn = 'data-raw/departements/',
                        layer = 'DEPARTEMENT',
                        quiet = TRUE) %>%
+  mutate(CODE_DEPT = as.integer(as.character(CODE_DEPT))) %>%
   group_by(CODE_DEPT, NOM_REG) %>%
   summarise()
 
