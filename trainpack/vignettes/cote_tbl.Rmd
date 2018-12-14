@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# How did we get the data from Le Monde?
+# Introduction
 To create the map we need the department associated with the departure and arrival trainstation. To automate this search and implement it in a scalable way we used google maps api to get from a string the first result latitude and longitude, then we converted it back to a postal code and country (to filter out non French destinations). 
 Then we needed to add the code per train line. Once we have a table with line names, departement codes and cotes we can run our carto function.
 
