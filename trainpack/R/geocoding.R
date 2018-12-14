@@ -5,7 +5,7 @@
 #' @return data frame with latitude and longitude of said "google map" request
 #' @export
 #'
-#' @import jsonlite
+#' @importFrom jsonlite fromJSON
 #'
 #' @examples
 #' geocoding("nantes, gare")

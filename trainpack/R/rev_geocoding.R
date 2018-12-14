@@ -5,7 +5,7 @@
 #'
 #' @return postcode of input address
 #' @export
-#' @import jsonlite
+#' @importFrom jsonlite fromJSON
 #'
 #' @examples rev_geocoding(47.01671,-1.435332)
 
