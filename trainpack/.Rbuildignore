@@ -1,0 +1,4 @@
+^devfun\.R$
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
