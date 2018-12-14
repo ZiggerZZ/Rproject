@@ -1,5 +1,5 @@
 context("test-fonction_temps_moyen")
 
-test_that("multiplication works", {
-  expect_equal(2 + 2, 4)
+test_that("Average time of train to go to Nantes from Paris is 133.66 minutes", {
+  expect_equal(fonction_temps_moyen("PARIS MONTPARNASSE", "NANTES")$Mean_Time, 133.6605)
 })
