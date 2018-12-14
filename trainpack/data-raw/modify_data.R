@@ -38,7 +38,7 @@ lemonde_dates <- lemonde_dates %>%
     month == "juin" ~ 6,
     month == "juillet" ~ 7,
     month == "août" ~ 8,
-    month == "novembre" ~ 9,
+    month == "septembre" ~ 9,
     month == "octobre" ~ 10,
     month == "novembre" ~ 11,
     month == "décembre" ~ 12
