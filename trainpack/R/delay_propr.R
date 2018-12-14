@@ -4,7 +4,7 @@
 #' Must be one of the stations in the dataframe \code{SNCF_regularite}.
 #' @param gareA the name of the arrival railway station.
 #' Must be one of the stations in the dataframe \code{SNCF_regularite}.
-#' @param mois the month witch will be considered in the function
+#' @param month the month which will be considered in the function
 #' @import dplyr
 #'
 #' @return it will return a dataframe with different types of delay times as names of the column and the proportion of each type in the specific month, between two selected stations

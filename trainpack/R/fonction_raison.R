@@ -4,7 +4,7 @@
 #' Must be one of the stations in the dataframe \code{SNCF_regularite}.
 #' @param gareB the name of the arrival railway station.
 #' Must be one of the stations in the dataframe \code{SNCF_regularite}.
-#' @param mois month when the train goes from \code{gareA} to \code{gareB}.
+#' @param month month when the train goes from \code{gareA} to \code{gareB}.
 #'
 #' @return a summary of the most probable reasons for a train to be late
 #' @import dplyr

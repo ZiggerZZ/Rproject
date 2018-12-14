@@ -21,30 +21,10 @@ carto <- function(gareA){
   map_cote <- departement %>%
     left_join(department_cote, by = "CODE_DEPT")
 
-  department_cote_error <- departement %>%
-    left_join(trainpack::cote_tbl, by = "CODE_DEPT") %>%
-    #filter(gare_de_depart == gareA) %>%
-    group_by(CODE_DEPT) %>%
-    filter(!is.na(cote)) %>%
-    summarise(cote = mean(cote))
-
-  map_cote_error <- departement %>%
-    st_join(department_cote_error, left = TRUE)
-
-  map_error <- ggplot(map_cote_error) +
+  map <- ggplot(map_cote) +
     aes(fill = cote) +
     geom_sf() +
     coord_sf(crs = 2154) +
     scale_fill_gradient(low = "yellow", high = "purple")
-
-  tryCatch(
-    map <- ggplot(map_cote) +
-      aes(fill = cote) +
-      geom_sf() +
-      coord_sf(crs = 2154) +
-      scale_fill_gradient(low = "yellow", high = "purple"),
-
-    error = function(c) return(map_error)
-  )
   return(map)
 }
