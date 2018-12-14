@@ -11,21 +11,8 @@
 
 
 fonction_article <- function(mois){
-  trainpack::lemonde_dates %>% mutate(month = case_when(
-    month == "janvier" ~ "Jan",
-    month == "février" ~ "Feb",
-    month == "mars" ~ "Mar",
-    month == "avril" ~ "Apr",
-    month == "mai" ~ "May",
-    month == "juin" ~ "Jun",
-    month == "juillet" ~ "Jul",
-    month == "août" ~ "Aug",
-    month == "septembre" ~ "Sep",
-    month == "octobre" ~ "Oct",
-    month == "novembre" ~ "Nov", 
-    month == "décembre" ~ "Dec"
-  )) %>%
+  trainpack::lemonde_dates %>%
     filter(month == mois) %>%
-    summarise(nb_of_article = mean(n)) %>% 
+    summarise(nb_of_article = mean(n)) %>%
     as.numeric()
 }
