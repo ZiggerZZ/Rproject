@@ -12,6 +12,7 @@ library(shinydashboard)
 library(dplyr)
 library(tidyverse)
 
+
 app_analysisUI <- function(id){
 
   ns <- NS(id)
@@ -66,6 +67,25 @@ app_analysisUI <- function(id){
 
       )
     )
+  )
+}
+
+app_MapUI <- function(id){
+  
+  ns <- NS(id)
+  tagList(
+    sidebarLayout(
+      sidebarPanel(
+        selectInput(ns("gareD"),
+                    label = "choose your station",
+                    choices =  trainpack::SNCF_regularite
+                    %>% select(gare_de_depart) %>% distinct()),
+      actionButton(inputId = ns("go"),label = "Go",icon = icon("GO"))),
+      mainPanel(
+                    plotOutput(ns("map"))
+                           )
+    
+  )
   )
 }
 app_gameUI <- function(id){
@@ -207,6 +227,20 @@ app_analysis <- function(input, output,session){
 
 }
 
+app_map <- function(input, output,session){
+  
+  data_gareD <- reactive({
+    input$gareD
+    
+  })
+  mapping <- eventReactive(input$go,{
+    carto(data_gareD())
+    })
+  output$map <- renderPlot({
+    mapping()
+  })
+
+}
 
 app_game <- function(input, output,session){
   observe({
@@ -311,7 +345,12 @@ ui <- dashboardPage(skin="green",
                                     )
                                   )
                         ),
-                        tabItem (tabName = "Map")
+                        tabItem ( tabName = "Map",
+                                  fluidRow(
+                                    app_MapUI("map")
+                                  )
+                        )
+
                       )
                       )
                       )
@@ -320,6 +359,7 @@ ui <- dashboardPage(skin="green",
 server <- function(input, output) {
   callModule(app_game,"game")
   callModule(app_analysis,"analysis")
+  callModule(app_map,"map")
 
   fct_art <- reactive({fonction_article(input$choix_date)})
   articles <- eventReactive(input$go2,{fct_art()})
