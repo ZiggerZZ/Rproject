@@ -324,7 +324,7 @@ server <- function(input, output) {
   fct_art <- reactive({fonction_article(input$choix_date)})
   articles <- eventReactive(input$go2,{fct_art()})
   output$monde <- renderText({
-    paste("<h4> There were","<b> <font color=\"#FF0000\"> ", articles(),"</b> </font color=\"#FF0000\"> articles on LeMonde.fr containing the words 'grève SNCF' this month")
+    paste("<h4> On average for the last 3 year and for this month, there were","<b> <font color=\"#FF0000\"> ", articles(),"</b> </font color=\"#FF0000\"> articles on LeMonde.fr containing the words 'grève SNCF'")
     })
 
   output$team <- renderText({
