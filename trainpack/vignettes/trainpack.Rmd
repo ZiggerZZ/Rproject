@@ -9,11 +9,15 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-#Package Vignette
+#Trainpack Vignette
+
+## Introduction
 The idea of our package is to design the functions that will feed our shiny application.
 We produced an application on which people can bet on the delay of their train.
 Inspired by the sports betting websites (betfair, pmu, winamax ...), we created a simple display where someone can bet on the delay of a train. We also wanted to display some facts and useful data to help the bettor placing his/her bet.
 Therefore, the main page of our application will be a simple menu to choose the train on which to bet. Once chosen, the odds are displayed with some facts that might influence the probability of the train to be late. There is also a space where to put the amount of money to bet. Once confirmed, the potential gain is displayed.
+
+
 To build this package, we started from the train data from the open data website of the SNCF. Unfortunately, we only have access to the monthly data of every TGV line and not the detail of all the trains. We met the SNCF head of data at a forum in Paris in october and asked him whether it was possible to recover this kind of data for all the trains but it is not yet possible so we adapted our calculations and functions accordingly.
 We cleaned the dataset to remove the points and the accent form the column name in order to be able to put it on github and export it in other countries. 
 
