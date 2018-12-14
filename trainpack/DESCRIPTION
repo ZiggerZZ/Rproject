@@ -19,5 +19,6 @@ Imports:
     magick,
     stats,
     jsonlite,
-    sf
+    sf,
+    ggplot2
 RoxygenNote: 6.1.1
